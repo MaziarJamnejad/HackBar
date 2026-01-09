@@ -181,17 +181,79 @@ This is intentional.
 
 ---
 
-### Make the box command available everywhere (recommended)
+## Make the box command available everywhere (recommended)
 
-Add `~/bin` to your PATH so `box_set.sh` can be run from any directory.
+HackBar keeps scripts inside the repository, but exposes the box setup command explicitly so it can be run from any directory.
 
-Add this to `~/.bashrc`:
+This avoids aliases, avoids shell-specific tricks, and keeps repositories clean and auditable.
 
-    export PATH="$HOME/bin:$PATH"
+---
 
-Reload your shell, then you can run:
+## 1) Choose a personal tools directory
 
-    box_set.sh
+Pick (or create) a directory that you use for personal, runnable tools.
+
+This should be a directory you control and trust.
+
+Common choices include:
+~/tools
+~/bin
+~/.local/bin
+
+In the steps below, this will be referred to as:
+/absolute/path/to/your/tools
+
+Replace this with the actual path you choose.
+
+---
+
+## 2) Add that directory to your PATH (zsh)
+
+Kali uses zsh by default.
+
+Edit your zsh configuration file:
+nano ~/.zshrc
+
+Add the following line near the bottom, replacing the path with your own:
+export PATH="/absolute/path/to/your/tools:$PATH"
+
+Reload zsh and refresh the command cache:
+source ~/.zshrc
+rehash
+
+If you use bash instead of zsh, add the same line to ~/.bashrc and reload it.
+
+---
+
+## 3) Expose the HackBar command with a symlink
+
+The HackBar setup script lives inside the repository at:
+<path-where-you-cloned-HackBar>/bin/box_set.sh
+
+PATH does not recurse into subdirectories, so the script must be exposed explicitly.
+
+Create a symlink in your tools directory:
+ln -s <path-where-you-cloned-HackBar>/bin/box_set.sh /absolute/path/to/your/tools/box-set
+
+Example, if you cloned HackBar into ~/tools/HackBar:
+ln -s ~/tools/HackBar/bin/box_set.sh ~/tools/box-set
+
+---
+
+## 4) Verify
+
+Check that the command is visible:
+command -v box-set
+
+The output should point to your tools directory.
+
+---
+
+## 5) Use it from anywhere
+
+You can now run the box setup command from any directory:
+
+box-set
 
 ---
 
