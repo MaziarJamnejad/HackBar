@@ -196,9 +196,11 @@ Pick (or create) a directory that you use for personal, runnable tools.
 This should be a directory you control and trust.
 
 Common choices include:
+```
 ~/tools
 ~/bin
 ~/.local/bin
+```
 
 In the steps below, this will be referred to as:
 /absolute/path/to/your/tools
@@ -212,14 +214,19 @@ Replace this with the actual path you choose.
 Kali uses zsh by default.
 
 Edit your zsh configuration file:
-'nano ~/.zshrc'
+
+```
+nano ~/.zshrc
+```
 
 Add the following line near the bottom, replacing the path with your own:
 export PATH="/absolute/path/to/your/tools:$PATH"
 
 Reload zsh and refresh the command cache:
+```
 source ~/.zshrc
 rehash
+```
 
 If you use bash instead of zsh, add the same line to ~/.bashrc and reload it.
 
@@ -228,22 +235,31 @@ If you use bash instead of zsh, add the same line to ~/.bashrc and reload it.
 ## 3) Expose the HackBar command with a symlink
 
 The HackBar setup script lives inside the repository at:
+```
 <path-where-you-cloned-HackBar>/bin/box_set.sh
+```
 
 PATH does not recurse into subdirectories, so the script must be exposed explicitly.
 
 Create a symlink in your tools directory:
+
+```
 ln -s <path-where-you-cloned-HackBar>/bin/box_set.sh /absolute/path/to/your/tools/box-set
+```
 
 Example, if you cloned HackBar into ~/tools/HackBar:
+```
 ln -s ~/tools/HackBar/bin/box_set.sh ~/tools/box-set
+```
 
 ---
 
 ## 4) Verify
 
 Check that the command is visible:
+```
 command -v box-set
+```
 
 The output should point to your tools directory.
 
@@ -253,8 +269,9 @@ The output should point to your tools directory.
 
 You can now run the box setup command from any directory:
 
+```
 box-set
-
+```
 ---
 
 ## Git hygiene
@@ -293,3 +310,4 @@ HackBar exists to **reduce thinking**, not add tooling.
 
 If you ever feel tempted to make it smarter,  
 pause first — the simplicity *is* the feature.
+
