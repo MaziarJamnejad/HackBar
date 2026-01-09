@@ -212,7 +212,7 @@ Replace this with the actual path you choose.
 Kali uses zsh by default.
 
 Edit your zsh configuration file:
-nano ~/.zshrc
+'nano ~/.zshrc'
 
 Add the following line near the bottom, replacing the path with your own:
 export PATH="/absolute/path/to/your/tools:$PATH"
