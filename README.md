@@ -1,4 +1,3 @@
-cat > README.md <<'EOF'
 # HackBar — Kali XFCE Box HUD
 
 HackBar is a small, boring, exam-safe “operator HUD” for **Kali Linux (XFCE)**.
