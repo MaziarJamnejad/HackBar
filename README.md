@@ -15,15 +15,7 @@ This avoids constant context-switching, copy/paste errors, and
 
 ## What it looks like
 
-📸 **Screenshot placeholder**
-
-Create a screenshot of your panel and save it as:
-
-    docs/screenshot.png
-
-Then add this line to the README to display it:
-
-    ![HackBar XFCE panel example](docs/screenshot.png)
+![HackBar XFCE panel example](docs/BarImage.png)
 
 The layout shown includes:
 - HackBar GenMon widget (VPN → target · provider/box)
