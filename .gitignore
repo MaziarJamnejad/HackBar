@@ -1,0 +1,6 @@
+# Local box context (contains IPs / box names)
+.box_state
+**/.box_state
+
+# XFCE panel exports (machine-specific, reference only)
+panel-export/
