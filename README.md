@@ -181,6 +181,20 @@ This is intentional.
 
 ---
 
+### Make the box command available everywhere (recommended)
+
+Add `~/bin` to your PATH so `box_set.sh` can be run from any directory.
+
+Add this to `~/.bashrc`:
+
+    export PATH="$HOME/bin:$PATH"
+
+Reload your shell, then you can run:
+
+    box_set.sh
+
+---
+
 ## Git hygiene
 
 This repo intentionally ignores:
