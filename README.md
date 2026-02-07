@@ -114,16 +114,6 @@ https://extensions.gnome.org/extension/2932/executor/
 > GNOME status bars are **single-line only**.  
 > HackBar prints a compact one-line string by design.
 
-### Copy actions (recommended)
-Bind keyboard shortcuts to:
-```bash
-~/bin/box_set.sh
-hackbar copy target
-hackbar copy vpn
-```
-
----
-
 ## Notes on panel configuration
 
 - XFCE panel configs are **machine-specific**
