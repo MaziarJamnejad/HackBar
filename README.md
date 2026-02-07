@@ -1,313 +1,161 @@
-# HackBar — Kali XFCE Box HUD
+HackBar — Minimal Box Context HUD (XFCE & GNOME)
 
-HackBar is a small, boring, exam-safe **operator HUD** for **Kali Linux (XFCE)**.
+HackBar is a small, boring, exam-safe operator HUD for CTF labs.
 
-It pins your active lab context directly to the XFCE panel so you can always see, at a glance:
+It keeps your current box context visible at all times so you don’t lose track of:
 
-- 🔒 Your **VPN IP** (`tun0`, auto-updating)
-- 🎯 The **target IP**
-- 🏷️ The **CTF provider and box name** (HTB / PG / THM / etc.)
+🔒 VPN IP (tun0, auto-updating)
 
-This avoids constant context-switching, copy/paste errors, and  
-*“wait — what box am I on?”* moments.
+🎯 Target IP
 
----
+🏷️ CTF / box name (HTB / PG / THM / etc.)
 
-## What it looks like
+No dashboards. No daemons. No cleverness.
+Just a reminder of where you are.
 
-![HackBar XFCE panel example](docs/BarImage.png)
+Supported environments
 
-The layout shown includes:
-- HackBar GenMon widget (VPN → target · provider/box)
-- Date and time as **two side-by-side clock widgets**
-- Monospace fonts and clean spacing
+HackBar supports two display backends, with the same underlying state:
 
----
+XFCE (Kali Linux)
 
-## What this repo contains
+Uses XFCE panel + GenMon
 
-    HackBar/
-    ├── bin/
-    │   ├── box_panel.sh        # XFCE GenMon widget renderer
-    │   └── box_set.sh          # One-time prompt per box
-    ├── config/
-    │   ├── export-panel-config.sh      # Reference-only panel config export
-    │   ├── genmon-command.txt          # Exact GenMon command
-    │   └── xfce4-panel.xml.snipper.example
-    ├── README.md
-    ├── LICENSE
-    └── .gitignore
+Supports click-to-copy
 
-You do **not** need to understand all of this to use HackBar.  
-Just follow the steps below, in order.
+Supports richer layout (icons, spacing)
 
----
+GNOME (Zorin / Ubuntu)
 
-## Requirements
+Uses Executor GNOME extension
 
-- Kali Linux with **XFCE**
-- XFCE panel
-- `xfce4-genmon-plugin` (Generic Monitor / GenMon)
-- `xclip` (for click-to-copy)
+Single-line status bar output (GNOME limitation)
 
-Install required packages:
+Copy actions via keyboard shortcuts
 
-    sudo apt update
-    sudo apt install -y xfce4-genmon-plugin xclip
+Both read from the same local state file: ~/.box_state.
 
----
+Repository layout
+HackBar/
+├── bin/
+│   ├── box_panel.sh      # XFCE GenMon renderer
+│   ├── box_set.sh        # Prompt once per box
+│   └── gnome_status.sh   # GNOME / Executor status output
+├── config/               # XFCE panel export helpers (reference only)
+├── docs/
+│   └── BarImage.png
+├── README.md
+└── LICENSE
 
-## Step 1 — Install the scripts
 
-From your home directory:
+You do not need everything here to use HackBar.
 
-    mkdir -p ~/bin
+Common setup (all environments)
 
-Copy the scripts from this repo into `~/bin`:
+Make the scripts available:
 
-    cp bin/box_panel.sh ~/bin/
-    cp bin/box_set.sh ~/bin/
-    chmod +x ~/bin/box_panel.sh ~/bin/box_set.sh
+mkdir -p ~/bin
+cp bin/*.sh ~/bin/
+chmod +x ~/bin/*.sh
 
-Why this matters:
-- `~/bin` is a standard place for personal scripts
-- Scripts must be executable for XFCE to run them
 
----
+Start a box (one-time per target):
 
-## Step 2 — Add HackBar to the XFCE panel
+~/bin/box_set.sh
 
-1. Right-click the XFCE panel  
-2. Select **Panel → Add New Items**  
-3. Add **Generic Monitor**  
-4. Right-click the new item → **Properties**
 
-Set:
+This writes:
 
-- **Command**  
-      ~/bin/box_panel.sh
+~/.box_state
 
-- **Period**  
-      2  
-  (seconds; `5` is also fine if you prefer fewer refreshes)
 
-Close the dialog and drag the widget where you want it on the panel.
+All display methods update automatically.
 
-At this point you’ll see something like:
+XFCE setup (Kali)
+Requirements
+sudo apt install -y xfce4-genmon-plugin xclip
 
-    🔒 no-vpn → 🎯 no-target · CTF/Box
+Add to panel
 
-That’s expected.
+Panel → Add New Items → Generic Monitor
 
----
+Command:
 
-## Step 3 — Start a box (one-time per target)
+~/bin/box_panel.sh
 
-When you begin working on a new box, run:
 
-    ~/bin/box_set.sh
+Period: 2 seconds
 
-You’ll be prompted for:
+Interaction
 
-    TargetIP [10.10.11.23]:
-    CTF [HTB]:
-    Box [Optimum]:
+Left-click → copy target IP
 
-Enter your values (or press Enter to accept defaults).
+Middle-click → copy VPN IP
 
-This writes a small local file:
+GNOME setup (Zorin / Ubuntu)
+Requirements
+sudo apt install -y wl-clipboard xclip
 
-    ~/.box_state
+Install Executor
 
-The panel widget reads this file automatically and updates immediately.  
-You do **not** need to restart XFCE or the panel.
+https://extensions.gnome.org/extension/2932/executor/
 
----
+Configure Executor
 
-## How interaction works
+Command:
 
-- **Left-click** the widget → copies the **target IP**
-- **Middle-click** the widget → copies the **VPN IP**
-- VPN IP updates automatically when `tun0` changes
-- Target / box info stays fixed until you run `box_set.sh` again
+~/bin/gnome_status.sh
 
----
 
-## Replicating the full panel layout (recommended)
+Interval: 2 seconds
 
-XFCE panel configs are **machine-specific** (plugin IDs differ per system), so there is no reliable “import this config” file.
+Position: Left (recommended)
 
-Instead, HackBar supports a **prompt-driven replication workflow** using ChatGPT.
+GNOME status bars are single-line only.
+HackBar prints a compact one-line string by design.
 
-### Workflow
+Copy actions (recommended)
 
-1. Export your panel configuration:
+Bind keyboard shortcuts to:
 
-       config/export-panel-config.sh
+~/bin/box_set.sh
+hackbar copy target
+hackbar copy vpn
 
-2. Open ChatGPT
-3. Paste the contents of `PROMPT.md`
-4. Upload:
-   - `panel-export/xfce4-panel.xml`
-   - `panel-export/xfconf-xfce4-panel.txt`
-   - (Optional) a screenshot of your current or desired panel
+Notes on panel configuration
 
-ChatGPT should generate **machine-specific, step-by-step instructions** to:
-- Recreate the HackBar GenMon widget
-- Add **two side-by-side clock widgets** (date-only + time-only)
-- Match ordering, spacing, and fonts
+XFCE panel configs are machine-specific
 
-Before uploading, redact anything sensitive  
-(usernames, internal hostnames, private IPs).
+This repo does not ship importable panel configs
 
----
-
-## About panel config files
-
-XFCE panel configuration lives in:
-
-    ~/.config/xfce4/
-
-These files are:
-- Not portable
-- Machine-specific
-- Often contain personal paths or hostnames
-
-For this reason:
-- This repo does **not** ship an importable panel config
-- Exported configs are **reference-only**
+config/ scripts are reference-only
 
 This is intentional.
 
----
+Git hygiene
 
-## Make the box command available everywhere (recommended)
+Ignored by design:
 
-HackBar keeps scripts inside the repository, but exposes the box setup command explicitly so it can be run from any directory.
+~/.box_state
 
-This avoids aliases, avoids shell-specific tricks, and keeps repositories clean and auditable.
+Exported panel config files
 
----
+No lab details should ever hit git.
 
-## 1) Choose a personal tools directory
+Design philosophy
 
-Pick (or create) a directory that you use for personal, runnable tools.
+One widget, one job
 
-This should be a directory you control and trust.
+No background services
 
-Common choices include:
-```
-~/tools
-~/bin
-~/.local/bin
-```
+No fragile imports
 
-In the steps below, this will be referred to as:
-/absolute/path/to/your/tools
+Exam-safe
 
-Replace this with the actual path you choose.
-
----
-
-## 2) Add that directory to your PATH (zsh)
-
-Kali uses zsh by default.
-
-Edit your zsh configuration file:
-
-```
-nano ~/.zshrc
-```
-
-Add the following line near the bottom, replacing the path with your own:
-export PATH="/absolute/path/to/your/tools:$PATH"
-
-Reload zsh and refresh the command cache:
-```
-source ~/.zshrc
-rehash
-```
-
-If you use bash instead of zsh, add the same line to ~/.bashrc and reload it.
-
----
-
-## 3) Expose the HackBar command with a symlink
-
-The HackBar setup script lives inside the repository at:
-```
-<path-where-you-cloned-HackBar>/bin/box_set.sh
-```
-
-PATH does not recurse into subdirectories, so the script must be exposed explicitly.
-
-Create a symlink in your tools directory:
-
-```
-ln -s <path-where-you-cloned-HackBar>/bin/box_set.sh /absolute/path/to/your/tools/box-set
-```
-
-Example, if you cloned HackBar into ~/tools/HackBar:
-```
-ln -s ~/tools/HackBar/bin/box_set.sh ~/tools/box-set
-```
-
----
-
-## 4) Verify
-
-Check that the command is visible:
-```
-command -v box-set
-```
-
-The output should point to your tools directory.
-
----
-
-## 5) Use it from anywhere
-
-You can now run the box setup command from any directory:
-
-```
-box-set
-```
----
-
-## Git hygiene
-
-This repo intentionally ignores:
-
-- `~/.box_state` (contains live IPs and box names)
-- Exported panel configuration directories
-
-This prevents accidental leakage of lab details.
-
----
-
-## Design philosophy
-
-- One widget = one job
-- No background daemons
-- No GNOME extensions
-- No fragile panel imports
-- Exam-safe
-- Boring by design
+Boring by design
 
 If it ever feels clever, it’s probably wrong.
 
----
+License
 
-## License
-
-MIT — use it, fork it, adapt it, improve it.
-
----
-
-## Final note
-
-HackBar exists to **reduce thinking**, not add tooling.
-
-If you ever feel tempted to make it smarter,  
-pause first — the simplicity *is* the feature.
-
+MIT.
