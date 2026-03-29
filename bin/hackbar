@@ -8,7 +8,7 @@ get_tun_ip() {
     | awk '{print $4}' | cut -d/ -f1 | head -n1
 }
 
-if [[ -n "${1:-}" ]]; then
+if [[ -n "${1:-}" && "${1:-}" != "status" ]]; then
   cat > "$STATE_FILE" <<EOF
 TARGET_IP="$1"
 EOF
