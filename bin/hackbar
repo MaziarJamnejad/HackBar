@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STATE_FILE="${HOME}/.box_state"
+
+get_tun_ip() {
+  ip -4 -o addr show dev tun0 2>/dev/null \
+    | awk '{print $4}' | cut -d/ -f1 | head -n1
+}
+
+if [[ -n "${1:-}" ]]; then
+  cat > "$STATE_FILE" <<EOF
+TARGET_IP="$1"
+EOF
+  echo "Target set: $1"
+  exit 0
+fi
+
+TARGET_IP="no-target"
+[[ -f "$STATE_FILE" ]] && source "$STATE_FILE"
+TUN_IP="$(get_tun_ip || true)"
+[[ -z "${TUN_IP:-}" ]] && TUN_IP="no-vpn"
+printf "%s/%s\n" "$TUN_IP" "${TARGET_IP:-no-target}"

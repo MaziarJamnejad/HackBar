@@ -35,10 +35,10 @@ Both read from the same local state file: `~/.box_state`.
 ```
 HackBar/
 ├── bin/
-│   ├── box_panel.sh      # XFCE GenMon renderer
-│   ├── box_set.sh        # Prompt once per box
-│   └── gnome_status.sh   # GNOME / Executor status output
-├── config/               # XFCE panel export helpers (reference only)
+│   ├── hackbar            # Set target / show status
+│   ├── box_panel.sh       # XFCE GenMon renderer
+│   └── gnome_status.sh    # GNOME / Executor status output
+├── config/                # XFCE panel export helpers (reference only)
 ├── docs/
 │   └── BarImage.png
 ├── README.md
@@ -51,24 +51,25 @@ You do **not** need everything here to use HackBar.
 
 ## Common setup (all environments)
 
-1) Make the scripts available:
+1) Install hackbar:
 ```bash
-mkdir -p ~/bin
+cp bin/hackbar ~/.local/bin/hackbar
 cp bin/*.sh ~/bin/
-chmod +x ~/bin/*.sh
+chmod +x ~/.local/bin/hackbar ~/bin/*.sh
 ```
 
-2) Start a box (one-time per target):
+2) Set a target:
 ```bash
-~/bin/box_set.sh
+hackbar 10.10.11.23
 ```
 
-This writes:
-```
-~/.box_state
+3) Check status (no args):
+```bash
+hackbar
+# output: 10.10.14.5/10.10.11.23
 ```
 
-All display methods update automatically.
+All panel display methods update automatically from `~/.box_state`.
 
 ---
 
